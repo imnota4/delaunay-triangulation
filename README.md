@@ -7,7 +7,7 @@ This project was designed to be very simple to use. It's all contained in a sing
 
 The first step is to create a **DelaunayTriangulation** object, and when doing so, making sure to call its constructor by passing it the width and height of the grid you're working with, followed by a List object containing all the points on the grid. All of the implementation is within the constructor and done in the background so you don't need to recall any additional functions
 
-Once you've created the object, just call the **getTriangles()** and it will return a list of **Triangle** objects, That's it, you're all done. You know have a List of Triangles which can be rendered to the screen with a single function call, as well as have various other useful geometric operations and functionality included within it. 
+Once you've created the object, just call the **getTriangles()** and it will return a list of **Triangle** objects, That's it, you're all done. You now have a List of Triangles which can be rendered to the screen with a single function call, as well as have various other useful geometric operations and functionality included within it. 
 *For further information on Triangle objects, visit the geometry repository for the README of that particular library.*
 
 ## Dependencies
