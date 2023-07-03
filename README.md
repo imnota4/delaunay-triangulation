@@ -13,7 +13,7 @@ Once you've created the object, just call the **getTriangles()** and it will ret
 ## Dependencies
 The implementation of the DelaunayTriangulation class is heavily reliant on classes defined within a namespace called **"geometry"** in another of my repositories. This dependency can be found here: https://github.com/imnota4/geometry
 
-## Example
+## Examples
 
 ![example3](https://github.com/imnota4/delaunay-triangulation/assets/4397050/a6f88951-d313-4700-8d9e-09c57659f14b)
 ![example4](https://github.com/imnota4/delaunay-triangulation/assets/4397050/e0333855-b7bc-48c7-9496-0bb70f365378)
