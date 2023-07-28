@@ -3,27 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Geometry;
-using Unity.VisualScripting.FullSerializer;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System;
-
 
 namespace Algorithms.Delaunay
 {
     public class DelaunayTriangulation
     {
         private List<Triangle> triangles;
-        private Dictionary<Triangle, List<Triangle>> hashmap;
 
         public List<Triangle> getTriangles()
         {
             return triangles;
-        }
-
-        public Dictionary<Triangle, List<Triangle>> getAdjacencyMap()
-        {
-            return hashmap;
         }
 
         private Dictionary<Triangle, List<Triangle>> generateTriangleMap(List<Triangle> triangles)
@@ -50,12 +42,20 @@ namespace Algorithms.Delaunay
             return adjacencyMap;
         }
 
-        public DelaunayTriangulation(float width, float height, List<Vector2> points)
+        private void OptimizedEditor()
         {
 
-            Vector2 vertex1 = new Vector2(0 - Mathf.Tan(30 * (Mathf.PI / 180)) * height, 0);
-            Vector2 vertex2 = new Vector2(width + Mathf.Tan(30 * (Mathf.PI / 180)) * height, 0);
-            Vector2 vertex3 = new Vector2(width / 2, height + Mathf.Tan(60 * (Mathf.PI / 180)) * (width / 2));
+        }
+
+        public DelaunayTriangulation(float width, float height, List<Point> points)
+        {
+
+            const float BAD_ANGLE = 12;
+
+            // Supra triangle vertices
+            Point vertex1 = new Point(0 - Mathf.Tan(30 * (Mathf.PI / 180)) * height, 0);
+            Point vertex2 = new Point(width + Mathf.Tan(30 * (Mathf.PI / 180)) * height, 0);
+            Point vertex3 = new Point(width / 2, height + Mathf.Tan(60 * (Mathf.PI / 180)) * (width / 2));
 
 
             triangles = new List<Triangle>
@@ -63,10 +63,10 @@ namespace Algorithms.Delaunay
             new Triangle(vertex1, vertex2, vertex3)
         };
 
-            foreach (Vector2 point in points)
+            foreach (Point point in points)
             {
                 List<Triangle> badTriangles = new List<Triangle>();
-                List<(Vector2, Vector2)> edgeList = new List<(Vector2, Vector2)>();
+                List<(Point, Point)> edgeList = new List<(Point, Point)>();
 
                 foreach (Triangle triangle in triangles)
                 {
@@ -81,11 +81,11 @@ namespace Algorithms.Delaunay
 
                 triangles.RemoveAll(triangle => badTriangles.Contains(triangle));
 
-                List<(Vector2, Vector2)> edgesToRemove = new List<(Vector2, Vector2)>();
+                List<(Point, Point)> edgesToRemove = new List<(Point, Point)>();
 
-                foreach ((Vector2, Vector2) edge1 in edgeList)
+                foreach ((Point, Point) edge1 in edgeList)
                 {
-                    foreach ((Vector2, Vector2) edge2 in edgeList)
+                    foreach ((Point, Point) edge2 in edgeList)
                     {
                         if (edge1.Item1.Equals(edge2.Item2) && edge1.Item2.Equals(edge2.Item1))
                         {
@@ -95,12 +95,12 @@ namespace Algorithms.Delaunay
                     }
                 }
 
-                foreach ((Vector2, Vector2) edgeToRemove in edgesToRemove)
+                foreach ((Point, Point) edgeToRemove in edgesToRemove)
                 {
                     edgeList.Remove(edgeToRemove);
                 }
 
-                foreach ((Vector2, Vector2) edge in edgeList)
+                foreach ((Point, Point) edge in edgeList)
                 {
                     triangles.Add(new Triangle(edge.Item1, edge.Item2, point));
                 }
@@ -109,7 +109,7 @@ namespace Algorithms.Delaunay
             }
 
             triangles.RemoveAll(triangle => triangle.containsVertice(vertex1) || triangle.containsVertice(vertex2) || triangle.containsVertice(vertex3));
-            hashmap = generateTriangleMap(triangles);
+            triangles.RemoveAll(triangle => triangle.getAngle(triangle.getEdges()[0], triangle.getEdges()[1]) < BAD_ANGLE || triangle.getAngle(triangle.getEdges()[1], triangle.getEdges()[2]) < BAD_ANGLE || triangle.getAngle(triangle.getEdges()[0], triangle.getEdges()[2]) < BAD_ANGLE);
         }
     }
 }
